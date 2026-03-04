@@ -1,13 +1,14 @@
 """Rotas da API REST."""
 import os
 import uuid
-from flask import Blueprint, request, jsonify, current_app, send_file, abort
-from app.tasks.pipeline import run_extraction_pipeline
-from app.services.job_service import JobService
-from app.services.credential_service import CredentialService
-from app.services.keyword_service import KeywordService
-from app.services.file_service import FileService
 
+from flask import Blueprint, abort, current_app, jsonify, request, send_file
+
+from app.services.credential_service import CredentialService
+from app.services.file_service import FileService
+from app.services.job_service import JobService
+from app.services.keyword_service import KeywordService
+from app.tasks.pipeline import run_extraction_pipeline
 
 api_bp = Blueprint('api', __name__, url_prefix='/api')
 
