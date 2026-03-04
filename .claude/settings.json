@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(for keyword in \"pano microfibra 40x30\" \"pano de cozinha 50x70\" \"vassoura macia\" \"vassoura rija\" \"guardanapos papel\" \"material geriátrico\" \"camas articuladas\" \"colchões anti-escaras\" \"cadeiras de rodas\" \"almofadas\" \"contentores de resíduos\" \"toalheteira\" \"toalhetes zig/zag\" \"esfregão verde\" \"esfregona ecológica\" \"esfregonas\" \"esfregonas salvas unhas\" \"esfregona especial\" \"esfregona industrial\")",
+      "Bash(for keyword in \"saco lixo\" \"saco lixo 60x100\" \"saco lixo 80x120\" \"saco lixo 97x130\" \"saco plástico\" \"saco de papel\" \"esponja\" \"esponja hospitalar\" \"saco hospitalar\" \"saco 50L\" \"saco 100L\" \"pá de lixo\" \"pá de lixo cabo alto\" \"panos de cozinha\" \"panos do pó\" \"sacos de lixo hospitalares\")",
+      "Bash(for keyword in \"desinfetante\" \"detergente neutro\" \"água sanitária\" \"bactericida\" \"virucida\" \"fungicida\" \"sanitizante\" \"limpeza terminal\" \"controle de pragas\" \"desinfestação de áreas\" \"limpeza de superfícies\" \"detergente de piso\" \"limpeza de vidros\" \"copos de papel\" \"guardanapos\" \"máscaras\" \"respiradores\" \"luvas de proteção\")",
+      "Bash(curl -s http://127.0.0.1:5000/api/keywords)",
+      "Bash(python3 -c \"import sys, json; data=json.load\\(sys.stdin\\); print\\(f\"\"Total de palavras-chave: {len\\(data\\)}\"\"\\); [print\\(f\"\"  - {kw[''word'']}\"\"\\) for kw in data[:20]]\")"
+    ]
+  }
+}

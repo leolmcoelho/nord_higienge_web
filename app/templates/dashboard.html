@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Nord Higiene Web{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>📊 Dashboard</h1>
+    <button class="btn btn-primary" onclick="startNewExtraction()">Nova Extração</button>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-label">Total de Jobs</div>
+        <div class="stat-value">{{ stats.total_jobs if stats else 0 }}</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Jobs Ativos</div>
+        <div class="stat-value">{{ stats.active_jobs if stats else 0 }}</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Downloads Hoje</div>
+        <div class="stat-value">{{ stats.downloads_today if stats else 0 }}</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Taxa de Sucesso</div>
+        <div class="stat-value">{{ stats.success_rate if stats else 0 }}%</div>
+    </div>
+</div>
+
+<div class="section">
+    <h2>📋 Jobs Recentes</h2>
+    <div class="table-container">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Status</th>
+                    <th>Criado em</th>
+                    <th>Duração</th>
+                    <th>Links</th>
+                    <th>Downloads</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if recent_jobs %}
+                    {% for job in recent_jobs %}
+                    <tr>
+                        <td>{{ job.id }}</td>
+                        <td>
+                            <span class="status-badge status-{{ job.status }}">{{ job.status }}</span>
+                        </td>
+                        <td>{{ job.created_at.strftime('%d/%m/%Y %H:%M') if job.created_at else '-' }}</td>
+                        <td>{{ "%.1f"|format(job.execution_time) if job.execution_time else '-' }}s</td>
+                        <td>{{ job.links_total or 0 }}</td>
+                        <td>{{ job.downloaded or 0 }}</td>
+                        <td>
+                            <a href="{{ url_for('dashboard.jobs_page') }}?uuid={{ job.uuid }}" class="btn btn-sm">Ver</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="7" class="text-center">Nenhum job encontrado</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal para Nova Extração -->
+<div id="extractionModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Nova Extração</h2>
+            <button class="close-modal" onclick="closeModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="extractionForm">
+                <h3>Credenciais Vortal</h3>
+                <div class="form-group">
+                    <label for="vortalUser">Usuário Vortal</label>
+                    <input type="text" id="vortalUser" name="vortal_user" class="form-control" required placeholder="Informe o usuário do Vortal" value="{{ vortal_user }}">
+                </div>
+                <div class="form-group">
+                    <label for="vortalPassword">Senha Vortal</label>
+                    <input type="password" id="vortalPassword" name="vortal_password" class="form-control" required placeholder="Informe a senha do Vortal" value="{{ vortal_password }}">
+                </div>
+
+                <h3>Credenciais AcinGov (Opcional)</h3>
+                <div class="form-group">
+                    <label for="acingovUser">Usuário AcinGov</label>
+                    <input type="text" id="acingovUser" name="acingov_user" class="form-control" placeholder="Informe o usuário do AcinGov" value="{{ acingov_user }}">
+                </div>
+                <div class="form-group">
+                    <label for="acingovPassword">Senha AcinGov</label>
+                    <input type="password" id="acingovPassword" name="acingov_password" class="form-control" placeholder="Informe a senha do AcinGov" value="{{ acingov_password }}">
+                </div>
+
+                <h3>Configurações da Extração</h3>
+                <div class="form-group">
+                    <label for="dateFrom">Data Inicial</label>
+                    <input type="date" id="dateFrom" name="date_from" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="dateTo">Data Final</label>
+                    <input type="date" id="dateTo" name="date_to" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="headless" name="headless" >
+                        Modo Headless (sem interface visual)
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="wordBoundaries" name="use_word_boundaries" checked>
+                        Usar correspondência por palavra inteira
+                    </label>
+                </div>
+                <button type="submit" class="btn btn-primary">Iniciar Extração</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}

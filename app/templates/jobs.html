@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block title %}Jobs - Nord Higiene Web{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>⚙️ Jobs de Extração</h1>
+    <div class="page-actions">
+        <select id="statusFilter" class="form-control" onchange="filterJobs()">
+            <option value="">Todos os Status</option>
+            <option value="pending">Pendente</option>
+            <option value="running">Executando</option>
+            <option value="completed">Concluído</option>
+            <option value="failed">Falhou</option>
+            <option value="cancelled">Cancelado</option>
+        </select>
+        <button class="btn btn-primary" onclick="startNewExtraction()">Nova Extração</button>
+    </div>
+</div>
+
+<div id="progressSection" class="progress-section" style="display: none;">
+    <div class="progress-card">
+        <h3>🔄 Executando Extração</h3>
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        <p id="progressMessage" class="progress-message">Iniciando...</p>
+        <div class="progress-stats">
+            <span id="linksProcessed">0/0 links</span>
+            <span id="downloadsCount">0 downloads</span>
+        </div>
+    </div>
+</div>
+
+<div class="section">
+    <div class="table-container">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>UUID</th>
+                    <th>Status</th>
+                    <th>Criado em</th>
+                    <th>Duração</th>
+                    <th>Links</th>
+                    <th>Downloads</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody id="jobsTableBody">
+                {% if jobs %}
+                    {% for job in jobs %}
+                    <tr data-status="{{ job.status }}">
+                        <td>{{ job.id }}</td>
+                        <td class="uuid">{{ job.uuid[:8] }}...</td>
+                        <td>
+                            <span class="status-badge status-{{ job.status }}">{{ job.status }}</span>
+                        </td>
+                        <td>{{ job.created_at.strftime('%d/%m/%Y %H:%M') if job.created_at else '-' }}</td>
+                        <td>{{ "%.1f"|format(job.execution_time) if job.execution_time else '-' }}s</td>
+                        <td>{{ job.links_total or 0 }}</td>
+                        <td>{{ job.downloaded or 0 }}</td>
+                        <td>
+                            {% if job.status == 'running' %}
+                                <button class="btn btn-sm btn-danger" onclick="cancelJob('{{ job.uuid }}')">Cancelar</button>
+                            {% elif job.status == 'completed' and job.report_path %}
+                                <a href="{{ url_for('api_bp.get_report', filename=job.report_path.split('/')[-1]) }}" class="btn btn-sm" target="_blank">Relatório</a>
+                            {% endif %}
+                            <button class="btn btn-sm" onclick="showJobDetails('{{ job.uuid }}')">Detalhes</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="8" class="text-center">Nenhum job encontrado</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal de Detalhes do Job -->
+<div id="jobDetailsModal" class="modal">
+    <div class="modal-content modal-large">
+        <div class="modal-header">
+            <h2>Detalhes do Job</h2>
+            <button class="close-modal" onclick="closeModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div id="jobDetailsContent">
+                <!-- Conteúdo carregado dinamicamente -->
+            </div>
+
+            <!-- Seção de Logs -->
+            <div id="logsSection" class="logs-section" style="display: none;">
+                <h3>📜 Logs de Execução</h3>
+                <div class="logs-container" id="logsContainer">
+                    <!-- Logs serão carregados aqui -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/jobs.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}Itens - Nord Higiene Web{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>📦 Itens Extraídos</h1>
+</div>
+
+<div class="section">
+    <h2>Itens</h2>
+    <div class="table-container">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Título</th>
+                    <th>Local</th>
+                    <th>Portal</th>
+                    <th>Data</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if items %}
+                    {% for item in items %}
+                    <tr>
+                        <td>{{ item.title }}</td>
+                        <td>{{ item.local }}</td>
+                        <td>{{ item.portal_type or 'Unknown' }}</td>
+                        <td>{{ item.processing_date.strftime('%d/%m/%Y') if item.processing_date else '-' }}</td>
+                        <td>
+                            {% if item.downloaded %}
+                                <span class="status-badge status-completed">Baixado</span>
+                            {% else %}
+                                <span class="status-badge status-pending">Pendente</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if item.dre_link %}
+                                <a href="{{ item.dre_link }}" target="_blank" class="btn btn-sm">Ver DRE</a>
+                            {% endif %}
+                            {% if item.portal_url %}
+                                <a href="{{ item.portal_url }}" target="_blank" class="btn btn-sm">Ver Portal</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center">Nenhum item encontrado</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/items.js') }}"></script>
+{% endblock %}

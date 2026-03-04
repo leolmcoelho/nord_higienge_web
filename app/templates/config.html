@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}Configuração - Nord Higiene Web{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>⚙️ Configuração</h1>
+</div>
+
+<div class="section">
+    <h2>Palavras-Chave Ativas</h2>
+    <div class="keywords-container">
+        {% if keywords %}
+            <div class="keywords-list">
+                {% for keyword in keywords %}
+                <div class="keyword-item">
+                    <span>{{ keyword.word }}</span>
+                    {% if keyword.source_file %}
+                    <span class="keyword-source">{{ keyword.source_file }}</span>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-center">Nenhuma palavra-chave configurada</p>
+        {% endif %}
+    </div>
+
+    <div class="form-group" style="margin-top: 20px;">
+        <label for="keywordInput">Adicionar Palavra-Chave</label>
+        <input type="text" id="keywordInput" class="form-control" placeholder="Digite uma palavra-chave">
+        <button class="btn btn-primary" onclick="addKeyword()" style="margin-top: 10px;">Adicionar</button>
+    </div>
+
+    <div class="form-group" style="margin-top: 20px;">
+        <h3>Upload de Palavras-Chave</h3>
+        <input type="file" id="keywordFile" accept=".xlsx,.xls,.csv" class="form-control">
+        <button class="btn btn-primary" onclick="uploadKeywords()" style="margin-top: 10px;">Upload Arquivo</button>
+    </div>
+</div>
+
+<div class="section">
+    <h2>Credenciais Padrão</h2>
+    <div class="credentials-info">
+        <p>As credenciais padrão são carregadas do arquivo <code>.env</code>:</p>
+        <ul>
+            <li><strong>Vortal:</strong> <span id="defaultVortalUser">{{ vortal_user or 'Não configurado' }}</span></li>
+            <li><strong>AcinGov:</strong> <span id="defaultAcinGovUser">{{ acingov_user or 'Não configurado' }}</span></li>
+        </ul>
+        <p class="text-muted">As senhas não são exibidas por segurança.</p>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/config.js') }}"></script>
+{% endblock %}

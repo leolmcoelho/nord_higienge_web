@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}Relatórios - Nord Higiene Web{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>📈 Relatórios</h1>
+</div>
+
+<div class="section">
+    <h2>Jobs Concluídos</h2>
+    <div class="table-container">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Status</th>
+                    <th>Criado em</th>
+                    <th>Duração</th>
+                    <th>Links</th>
+                    <th>Downloads</th>
+                    <th>Relatório</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if jobs %}
+                    {% for job in jobs %}
+                    <tr>
+                        <td>{{ job.id }}</td>
+                        <td>
+                            <span class="status-badge status-{{ job.status }}">{{ job.status }}</span>
+                        </td>
+                        <td>{{ job.created_at.strftime('%d/%m/%Y %H:%M') if job.created_at else '-' }}</td>
+                        <td>{{ "%.1f"|format(job.execution_time) if job.execution_time else '-' }}s</td>
+                        <td>{{ job.links_total or 0 }}</td>
+                        <td>{{ job.downloaded or 0 }}</td>
+                        <td>
+                            {% if job.status == 'completed' %}
+                                <a href="#" class="btn btn-sm">Ver Relatório</a>
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="7" class="text-center">Nenhum job encontrado</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/reports.js') }}"></script>
+{% endblock %}

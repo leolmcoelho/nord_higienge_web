@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Nord Higiene Web{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-brand">
+                <span class="logo">🏢</span>
+                <span>Nord Higiene</span>
+            </div>
+            <div class="navbar-menu">
+                <a href="{{ url_for('dashboard.index') }}" class="nav-link {% if request.endpoint == 'dashboard.index' %}active{% endif %}">Dashboard</a>
+                <a href="{{ url_for('dashboard.jobs_page') }}" class="nav-link {% if request.endpoint == 'dashboard.jobs_page' %}active{% endif %}">Jobs</a>
+                <a href="{{ url_for('dashboard.reports_page') }}" class="nav-link {% if request.endpoint == 'dashboard.reports_page' %}active{% endif %}">Relatórios</a>
+                <a href="{{ url_for('dashboard.items_page') }}" class="nav-link {% if request.endpoint == 'dashboard.items_page' %}active{% endif %}">Itens</a>
+                <a href="{{ url_for('dashboard.config_page') }}" class="nav-link {% if request.endpoint == 'dashboard.config_page' %}active{% endif %}">Configuração</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="container">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 Nord Higiene. Sistema de Extração de Editais.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script src="{{ url_for('static', filename='js/socket.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>
