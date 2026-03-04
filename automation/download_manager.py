@@ -5,7 +5,7 @@ import time
 import uuid
 import zipfile
 
-from logger import logger
+from .logger import logger
 
 
 class DownloadManager:

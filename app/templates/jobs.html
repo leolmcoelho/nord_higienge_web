@@ -64,7 +64,7 @@
                             {% if job.status == 'running' %}
                                 <button class="btn btn-sm btn-danger" onclick="cancelJob('{{ job.uuid }}')">Cancelar</button>
                             {% elif job.status == 'completed' and job.report_path %}
-                                <a href="{{ url_for('api_bp.get_report', filename=job.report_path.split('/')[-1]) }}" class="btn btn-sm" target="_blank">Relatório</a>
+                                <a href="{{ url_for('api.get_report', filename=job.report_path.split('/')[-1]) }}" class="btn btn-sm" target="_blank">Relatório</a>
                             {% endif %}
                             <button class="btn btn-sm" onclick="showJobDetails('{{ job.uuid }}')">Detalhes</button>
                         </td>

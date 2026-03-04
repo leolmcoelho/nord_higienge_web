@@ -4,7 +4,7 @@ import datetime
 import os
 from typing import Literal
 
-from logger import logger
+from .logger import logger
 
 
 def generate_report(

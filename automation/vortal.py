@@ -10,10 +10,9 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
-from download_manager import DownloadManager
-from driver import create_driver
-from lists import white_list
-from logger import logger
+from .download_manager import DownloadManager
+from .driver import create_driver
+from .logger import logger
 
 
 class VortalClient:

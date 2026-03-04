@@ -1,4 +1,5 @@
 """Tarefas Celery para execução do pipeline de automação."""
+import logging
 import os
 import traceback
 from datetime import datetime
@@ -147,7 +148,7 @@ def run_extraction_pipeline(self, job_uuid: str, config: dict):
                     # se falhar, seguimos e deixamos o automation levantar o erro
                     pass
 
-            from automation import run_pipeline
+            from automation.automation import run_pipeline
 
             # Executar pipeline com callback de progresso
             emit_progress(job_uuid, 'Executando busca no DRE...')
@@ -231,7 +232,6 @@ def run_extraction_pipeline(self, job_uuid: str, config: dict):
         except Exception:
             # Se falhar, apenas logamos e continuamos para emitir o evento
             try:
-                import logging
                 logging.exception('Falha ao atualizar job com erro')
             except Exception:
                 pass

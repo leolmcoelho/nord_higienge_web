@@ -1,10 +1,6 @@
-version: '3.8'
-
 services:
   redis:
     image: redis:7
-    ports:
-      - "6379:6379"
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 5s
@@ -21,7 +17,7 @@ services:
       - DATABASE_URL=sqlite:///data/database.db
       - REDIS_URL=redis://redis:6379/0
     ports:
-      - "5000:5000"
+      - "6161:5000"
     volumes:
       - ./:/app
       - ./logs:/app/logs
@@ -36,7 +32,7 @@ services:
 
   worker:
     build: .
-    command: bash -lc ".venv/bin/celery -A app.tasks.celery_app worker --loglevel=info -c 1 -n worker@%h"
+    command: celery -A app.tasks.celery_app worker --loglevel=info -c 1 -n worker@%h
     volumes:
       - ./:/app
       - ./logs:/app/logs
@@ -46,10 +42,11 @@ services:
       - web
     environment:
       - REDIS_URL=redis://redis:6379/0
+      - PYTHONPATH=/app
 
   tester:
     build: .
-    command: bash -lc "./scripts/wait_for_service.sh http://web:5000/api/jobs 120 && python scripts/e2e_test.py"
+    command: bash -c "bash ./scripts/wait_for_service.sh http://web:5000/api/jobs 120 && python scripts/e2e_test.py"
     depends_on:
       - web
       - worker

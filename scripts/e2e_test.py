@@ -4,16 +4,20 @@ import time
 
 import requests
 
-# lê .env simples
+# lê .env simples (opcional)
 env = {}
-with open('.env') as f:
-    for l in f:
-        l = l.strip()
-        if not l or l.startswith('#'):
-            continue
-        if '=' in l:
-            k, v = l.split('=', 1)
-            env[k.strip()] = v.strip()
+env_paths = ['.env', '/app/.env']
+for env_path in env_paths:
+    if os.path.exists(env_path):
+        with open(env_path) as f:
+            for l in f:
+                l = l.strip()
+                if not l or l.startswith('#'):
+                    continue
+                if '=' in l:
+                    k, v = l.split('=', 1)
+                    env[k.strip()] = v.strip()
+        break
 
 vortal_user = env.get('VORTAL_USER')
 vortal_password = env.get('VORTAL_PASSWORD')

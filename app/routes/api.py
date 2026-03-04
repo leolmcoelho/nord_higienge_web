@@ -1,6 +1,7 @@
 """Rotas da API REST."""
+import os
 import uuid
-from flask import Blueprint, request, jsonify, current_app
+from flask import Blueprint, request, jsonify, current_app, send_file, abort
 from app.tasks.pipeline import run_extraction_pipeline
 from app.services.job_service import JobService
 from app.services.credential_service import CredentialService
@@ -213,3 +214,17 @@ def upload_keywords():
         'filename': file.filename,
         'count': count
     })
+
+
+@api_bp.route('/reports/<path:filename>', methods=['GET'])
+def get_report(filename):
+    """Serve um arquivo de relatório gerado."""
+    base_dir = os.path.join(current_app.root_path, '..', 'relatorio')
+    base_dir = os.path.realpath(base_dir)
+    full_path = os.path.realpath(os.path.join(base_dir, filename))
+    # Protege contra path traversal
+    if not full_path.startswith(base_dir):
+        abort(403)
+    if not os.path.isfile(full_path):
+        abort(404)
+    return send_file(full_path, mimetype='text/html')

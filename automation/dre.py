@@ -10,9 +10,9 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import Select, WebDriverWait
 
-from driver import create_driver
-from logger import logger
-from words import get_word_list, normalize_word
+from .driver import create_driver
+from .logger import logger
+from .words import get_word_list, normalize_word
 
 
 class DREClient:

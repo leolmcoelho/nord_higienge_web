@@ -1,16 +1,16 @@
 import datetime
-import json
 import time
 from typing import Callable, Optional
 
-from acingov import AcingovClient
-from dre import DREClient
-from driver import create_driver
-from logger import logger
-from report import generate_report
-from vortal import VortalClient
 from selenium.common.exceptions import WebDriverException
-from words import get_word_list
+
+from .acingov import AcingovClient
+from .dre import DREClient
+from .driver import create_driver
+from .logger import logger
+from .report import generate_report
+from .vortal import VortalClient
+from .words import get_word_list
 
 StatusHook = Optional[Callable[[str], None]]
 
